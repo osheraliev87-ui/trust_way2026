@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrustWay Control</title>
+<style>
+:root{
+  --bg:#020617;
+  --panel:#07111f;
+  --panel2:#0b1627;
+  --card:#0f1b2e;
+  --gold:#d4af37;
+  --gold2:#f6d56b;
+  --silver:#e5e7eb;
+  --line:rgba(212,175,55,.18);
+  --text:#ffffff;
+  --muted:#9aa8bb;
+  --green:#22c55e;
+  --red:#ef4444;
+  --amber:#f59e0b;
+  --cyan:#22d3ee;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(212,175,55,.18),transparent 38%),
+    radial-gradient(circle at 85% 10%,rgba(255,255,255,.06),transparent 32%),
+    linear-gradient(135deg,#020617,#07111e 45%,#01040a);
+  color:var(--text);
+}
+.app{display:flex;min-height:100vh}
+aside{
+  width:292px;position:sticky;top:0;height:100vh;padding:24px;
+  background:rgba(2,6,23,.88);border-right:1px solid var(--line);backdrop-filter:blur(18px)
+}
+.brandLogo{display:flex;justify-content:center;margin-bottom:26px}
+.brandLogo img{
+  width:168px;height:168px;border-radius:50%;object-fit:cover;
+  padding:10px;background:linear-gradient(145deg,#020617,#0b1627);
+  box-shadow:0 0 0 2px rgba(212,175,55,.38),0 24px 75px rgba(0,0,0,.65)
+}
+.nav button{
+  width:100%;border:0;background:transparent;color:#cbd5e1;padding:14px 15px;border-radius:16px;
+  text-align:left;font-weight:850;cursor:pointer;margin:5px 0;font-size:15px;transition:.2s
+}
+.nav button:hover{background:rgba(212,175,55,.10);color:white}
+.nav button.active{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111e;
+  box-shadow:0 18px 42px rgba(212,175,55,.22)
+}
+.sideBox{
+  margin-top:24px;padding:18px;border-radius:22px;
+  background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(255,255,255,.05));
+  border:1px solid var(--line);color:#f8e7ad;line-height:1.65;font-size:13px
+}
+main{flex:1;padding:30px;max-width:1750px;margin:0 auto;width:100%}
+.mobileNav{display:none;margin-bottom:16px;width:100%;padding:13px;border-radius:14px;background:#0b1627;color:white;border:1px solid var(--line)}
+.page{display:none}.page.active{display:block}
+.hero{
+  position:relative;overflow:hidden;border-radius:34px;padding:34px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(15,27,46,.88) 48%,rgba(255,255,255,.04));
+  box-shadow:0 34px 100px rgba(0,0,0,.45)
+}
+.hero:before{
+  content:"TW";position:absolute;right:32px;top:4px;font-size:150px;font-weight:1000;
+  letter-spacing:-12px;color:rgba(212,175,55,.055)
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 15px;border-radius:999px;
+  background:rgba(255,255,255,.07);border:1px solid var(--line);font-size:13px;font-weight:900;color:#fde68a
+}
+.hero h2{font-size:52px;line-height:1.02;letter-spacing:-1.8px;margin:22px 0 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{
+  border:0;border-radius:15px;padding:13px 18px;font-size:15px;font-weight:950;cursor:pointer;
+  transition:.18s;white-space:nowrap
+}
+.btn:hover{transform:translateY(-1px)}
+.btnWhite{background:white;color:#07111e}
+.btnGold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111e}
+.btnRed{background:rgba(239,68,68,.16);color:#fecaca;border:1px solid rgba(239,68,68,.30)}
+.btnGreen{background:rgba(34,197,94,.16);color:#bbf7d0;border:1px solid rgba(34,197,94,.30)}
+.grid{display:grid;gap:17px}.kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin:22px 0}
+.card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(15,27,46,.88),rgba(7,17,31,.9));
+  border-radius:24px;padding:22px;box-shadow:0 22px 70px rgba(0,0,0,.30);backdrop-filter:blur(12px)
+}
+.kpiIcon{
+  width:52px;height:52px;border-radius:17px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(255,255,255,.08));
+  border:1px solid rgba(212,175,55,.22);font-size:24px;margin-bottom:16px
+}
+.label{color:var(--muted);font-size:14px}.value{font-size:28px;font-weight:1000;margin-top:8px}
+.hint{font-size:13px;color:#718096;margin-top:8px}.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.cyan{color:var(--cyan)}
+.sectionTitle{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px}
+.sectionTitle h2{font-size:38px;letter-spacing:-1px;margin:0}.sectionTitle p{display:none}
+.sectionIcon{
+  display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(212,175,55,.24),rgba(255,255,255,.07));
+  border:1px solid rgba(212,175,55,.24);margin-right:12px;vertical-align:middle
+}
+.cleanTitle{display:flex;align-items:center;gap:12px}
+.tableWrap{overflow:auto;border-radius:24px;border:1px solid var(--line);background:rgba(7,17,31,.86);box-shadow:0 24px 80px rgba(0,0,0,.25)}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1350px;font-size:15px}
+th{
+  position:sticky;top:0;background:linear-gradient(135deg,#172033,#0b1627);color:#fde68a;text-align:left;
+  padding:15px 12px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.4px;z-index:1
+}
+td{padding:12px;border-bottom:1px solid rgba(255,255,255,.07);border-right:1px solid rgba(255,255,255,.04);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.03)}
+input,select{
+  width:100%;min-width:115px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:12px;color:white;outline:none;font-size:15px;font-weight:650
+}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.13)}
+option{background:#0b1627;color:white}.num{font-weight:950}
+.bars{display:flex;align-items:end;gap:14px;height:250px;margin-top:20px;overflow:auto}
+.barBox{min-width:92px;flex:1;text-align:center;color:var(--muted);font-size:13px}
+.barBg{height:170px;background:rgba(255,255,255,.05);border-radius:18px;padding:8px;display:flex;align-items:end}
+.bar{width:100%;border-radius:12px;background:linear-gradient(0deg,var(--gold),var(--gold2))}
+.lineChart{height:250px;width:100%;margin-top:16px}
+.analysisBox{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.analysisItem{padding:16px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.13)}
+.installmentHero{background:linear-gradient(135deg,rgba(212,175,55,.11),rgba(255,255,255,.04));border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:18px}
+.settingsGrid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:900px}
+.langBtn{border:1px solid var(--line);background:rgba(255,255,255,.07);color:white;border-radius:20px;padding:20px;font-size:18px;font-weight:950;cursor:pointer}
+.langBtn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111e}
+@media(max-width:1150px){
+  aside{display:none}.mobileNav{display:block}.kpis{grid-template-columns:repeat(2,1fr)}
+  .hero h2{font-size:34px}.sectionTitle{display:block}.analysisBox{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr!important}main{padding:16px}.card{padding:18px}
+}
+
+/* TrustWay Login System */
+.tw-auth-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(212,175,55,.24),transparent 38%),
+    radial-gradient(circle at 85% 10%,rgba(255,255,255,.07),transparent 32%),
+    linear-gradient(135deg,#020617,#07111e 45%,#01040a);
+  color:#fff;
+  font-family:Inter,Arial,sans-serif;
+}
+.tw-login-card{
+  width:100%;
+  max-width:390px;
+  padding:34px;
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(15,27,46,.94),rgba(7,17,31,.96));
+  border:1px solid rgba(212,175,55,.24);
+  box-shadow:0 35px 110px rgba(0,0,0,.55);
+  text-align:center;
+}
+.tw-login-logo{
+  width:78px;
+  height:78px;
+  margin:0 auto 18px;
+  border-radius:24px;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+  font-weight:1000;
+  color:#07111e;
+  background:linear-gradient(135deg,#d4af37,#f6d56b);
+  box-shadow:0 0 45px rgba(212,175,55,.35);
+}
+.tw-login-card h1{margin:0 0 6px;font-size:30px;letter-spacing:-.8px}
+.tw-login-card p{margin:0 0 24px;color:#9aa8bb;line-height:1.55}
+.tw-login-card input{
+  width:100%;
+  min-width:0;
+  margin-bottom:12px;
+  padding:15px 16px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.07);
+  color:white;
+  outline:none;
+  font-size:16px;
+}
+.tw-login-card input:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.14)}
+.tw-login-card button{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  margin-top:6px;
+  font-size:16px;
+  font-weight:950;
+  cursor:pointer;
+  color:#07111e;
+  background:linear-gradient(135deg,#d4af37,#f6d56b);
+}
+.tw-auth-lang{display:flex;gap:10px;margin-bottom:18px}
+.tw-auth-lang button{
+  flex:1;
+  padding:11px;
+  border-radius:13px;
+  border:1px solid rgba(212,175,55,.22);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+}
+.tw-auth-lang button.active{background:linear-gradient(135deg,#d4af37,#f6d56b);color:#07111e}
+.tw-auth-error{min-height:22px;margin-top:12px;color:#fecaca;font-weight:800}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brandLogo"><img src="logo.png" alt="TrustWay logo"></div>
+  <div class="nav">
+    <button class="active" onclick="show('dashboard',this)">📊 <span data-t="dashboard">Dashboard</span></button>
+    <button onclick="show('unit',this)">🧮 <span data-t="unit">Юнит-экономика</span></button>
+    <button onclick="show('china',this)">🌍 <span data-t="china">Закупка из Китая</span></button>
+    <button onclick="show('installment',this)">💳 <span data-t="installment">Рассрочка</span></button>
+    <button onclick="show('plan',this)">📈 <span data-t="plan">План прибыли</span></button>
+    <button onclick="show('investor',this)">💸 <span data-t="investor">Инвестор</span></button>
+    <button onclick="show('flow',this)">🧠 <span data-t="flow">Анализ поток</span></button>
+    <button onclick="show('settings',this)">⚙️ <span data-t="settings">Настройки</span></button>
+  </div>
+  <div class="sideBox"><b data-t="autoCalc">TrustWay Analysis</b><br><span data-t="autoText">Control · Analyze · Plan · Grow</span></div>
+</aside>
+
+<main>
+<select class="mobileNav" onchange="show(this.value)">
+<option value="dashboard" data-t="dashboard">Dashboard</option>
+<option value="unit" data-t="unit">Юнит-экономика</option>
+<option value="china" data-t="china">Закупка из Китая</option>
+<option value="installment" data-t="installment">Рассрочка</option>
+<option value="plan" data-t="plan">План прибыли</option>
+<option value="investor" data-t="investor">Инвестор</option>
+<option value="flow" data-t="flow">Анализ поток</option>
+<option value="settings" data-t="settings">Настройки</option>
+</select>
+
+<section id="dashboard" class="page active">
+  <div class="hero">
+    <span class="badge">TrustWay Control</span>
+    <h2 data-t="heroTitle">TrustWay Control</h2>
+    <div class="actions"><button class="btn btnWhite" onclick="show('installment')">💳 <span data-t="installment">Рассрочка</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div>
+  </div>
+  <div class="grid kpis">
+    <div class="card"><div class="kpiIcon">📦</div><div class="label" data-t="kpiCost">Себестоимость</div><div id="kpiCost" class="value">0 ₽</div></div>
+    <div class="card"><div class="kpiIcon">💰</div><div class="label" data-t="kpiProfit">Чистая прибыль</div><div id="kpiProfit" class="value green">0 ₽</div></div>
+    <div class="card"><div class="kpiIcon">💳</div><div class="label" data-t="kpiInstRest">Остаток рассрочки</div><div id="kpiInstRest" class="value amber">0 ₽</div></div>
+    <div class="card"><div class="kpiIcon">🛒</div><div class="label" data-t="kpiOrders">Заказы</div><div id="kpiOrders" class="value">0</div></div>
+    <div class="card"><div class="kpiIcon">💸</div><div class="label" data-t="kpiInv">Инвестиции</div><div id="kpiInv" class="value">0 ₽</div></div>
+  </div>
+  <div class="grid grid2" style="grid-template-columns:1.5fr 1fr">
+    <div class="card"><h2 style="margin-top:0" data-t="profitChart">График прибыли по товарам</h2><div id="bars" class="bars"></div></div>
+    <div class="card"><h2 style="margin-top:0" data-t="businessAnalysis">Анализ бизнеса</h2><div id="dashAnalysis" class="analysisBox" style="grid-template-columns:1fr"></div></div>
+  </div>
+  <div class="card" style="margin-top:17px"><h2 style="margin-top:0" data-t="flowTrend">Тренд потока / прибыли</h2><svg id="trendSvg" class="lineChart"></svg></div>
+</section>
+
+<section id="unit" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">🧮</span><span data-t="unitTitle">Юнит-экономика</span></h2><p></p></div><div class="actions"><button class="btn btnWhite" onclick="addUnit()">+ <span data-t="add">Добавить</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div></div>
+  <div class="tableWrap"><table><thead id="unitHead"></thead><tbody id="unitRows"></tbody></table></div>
+</section>
+
+<section id="china" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">🌍</span><span data-t="chinaTitle">Закупка из Китая</span></h2><p></p></div><div class="actions"><button class="btn btnWhite" onclick="addChina()">+ <span data-t="add">Добавить</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div></div>
+  <div class="tableWrap"><table><thead id="chinaHead"></thead><tbody id="chinaRows"></tbody></table></div>
+</section>
+
+<section id="installment" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">💳</span><span data-t="installmentTitle">Рассрочка_Китай</span></h2><p></p></div><div class="actions"><button class="btn btnWhite" onclick="addInst()">+ <span data-t="addRow">Добавить строку</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div></div>
+  <div class="installmentHero">
+    <div class="grid kpis">
+      <div class="card"><div class="label" data-t="totalYuan">Общий ¥</div><div id="instTotalY" class="value cyan">0 ¥</div></div>
+      <div class="card"><div class="label" data-t="totalRub">Общий ₽</div><div id="instTotalR" class="value">0 ₽</div></div>
+      <div class="card"><div class="label" data-t="paidYuan">Оплачено ¥</div><div id="instPaidY" class="value green">0 ¥</div></div>
+      <div class="card"><div class="label" data-t="restYuan">Остаток ¥</div><div id="instRestY" class="value amber">0 ¥</div></div>
+      <div class="card"><div class="label" data-t="restRub">Остаток ₽</div><div id="instRestR" class="value red">0 ₽</div></div>
+    </div>
+  </div>
+  <div class="tableWrap"><table><thead id="instHead"></thead><tbody id="instRows"></tbody></table></div>
+  <div class="grid grid2" style="grid-template-columns:1.5fr 1fr;margin-top:18px">
+    <div class="card"><h2 style="margin-top:0" data-t="debtChart">График остатка по товарам</h2><div id="instBars" class="bars"></div></div>
+    <div class="card"><h2 style="margin-top:0" data-t="installmentAnalysis">Анализ рассрочки</h2><div id="instAnalysis" class="analysisBox" style="grid-template-columns:1fr"></div></div>
+  </div>
+</section>
+
+<section id="plan" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">📈</span><span data-t="planTitle">План прибыли</span></h2><p></p></div><div class="actions"><button class="btn btnWhite" onclick="addPlan()">+ <span data-t="add">Добавить</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div></div>
+  <div class="tableWrap"><table><thead id="planHead"></thead><tbody id="planRows"></tbody></table></div>
+</section>
+
+<section id="investor" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">💸</span><span data-t="investorTitle">Инвестор</span></h2><p></p></div><div class="actions"><button class="btn btnGreen" onclick="addInvestor()">+ <span data-t="add">Добавить</span></button><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div></div>
+  <div class="tableWrap"><table><thead id="investorHead"></thead><tbody id="investorRows"></tbody></table></div>
+</section>
+
+<section id="flow" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">🧠</span><span data-t="flowTitle">Анализ потоков</span></h2><p></p></div><button class="btn btnGold" onclick="downloadReport()">⬇️ <span data-t="downloadReport">Скачать отчёт</span></button></div>
+  <div class="grid kpis" id="flowKpis"></div>
+  <div class="grid grid2" style="grid-template-columns:1.3fr 1fr">
+    <div class="card"><h2 style="margin-top:0" data-t="flowChart">График потоков</h2><div id="flowBars" class="bars"></div></div>
+    <div class="card"><h2 style="margin-top:0" data-t="recommendations">Рекомендации</h2><div id="flowAdvice" class="mini"></div></div>
+  </div>
+  <div class="tableWrap" style="margin-top:17px"><table><thead id="flowHead"></thead><tbody id="flowRows"></tbody></table></div>
+</section>
+
+<section id="settings" class="page">
+  <div class="sectionTitle"><div><h2 class="cleanTitle"><span class="sectionIcon">⚙️</span><span data-t="settingsTitle">Настройки</span></h2><p></p></div></div>
+  <div class="grid settingsGrid"><button id="ruBtn" class="langBtn active" onclick="setLang('ru')">🇷🇺 Русский</button><button id="zhBtn" class="langBtn" onclick="setLang('zh')">🇨🇳 中文</button></div>
+  <div class="card" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+    <button class="btn btnRed" onclick="resetData()" data-t="resetData">Сбросить данные</button>
+    <button class="btn btnGold" onclick="twLogout()" data-t="logout">Выход</button>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+const langData={
+  ru:{
+    dashboard:"Dashboard",unit:"Юнит-экономика",china:"Закупка из Китая",installment:"Рассрочка",plan:"План прибыли",investor:"Инвестор",flow:"Анализ поток",settings:"Настройки",
+    autoCalc:"TrustWay Analysis",autoText:"Control · Analyze · Plan · Grow",heroTitle:"TrustWay Control",
+    chinaTitle:"Закупка из Китая",installmentTitle:"Рассрочка_Китай",investorTitle:"Инвестор",unitTitle:"Юнит-экономика",planTitle:"План прибыли",flowTitle:"Анализ потоков",settingsTitle:"Настройки",
+    kpiCost:"Себестоимость",kpiProfit:"Чистая прибыль",kpiInstRest:"Остаток рассрочки",kpiOrders:"Заказы",kpiInv:"Инвестиции",
+    profitChart:"График прибыли по товарам",businessAnalysis:"Анализ бизнеса",flowTrend:"Тренд потока / прибыли",debtChart:"График остатка по товарам",installmentAnalysis:"Анализ рассрочки",flowChart:"График потоков",recommendations:"Рекомендации",
+    downloadReport:"Скачать отчёт",add:"Добавить",addRow:"Добавить строку",resetData:"Сбросить данные",logout:"Выход",
+    totalYuan:"Общий ¥",totalRub:"Общий ₽",paidYuan:"Оплачено ¥",restYuan:"Остаток ¥",restRub:"Остаток ₽",
+    closed:"Долг закрыт",hasDebt:"Есть остаток долга",good:"Хорошо: прибыль положительная",risk:"Риск: прибыль отрицательная",strong:"Сильный",normal:"Нормально"
+  },
+  zh:{
+    dashboard:"仪表盘",unit:"单位经济",china:"中国采购",installment:"分期付款",plan:"利润计划",investor:"投资者",flow:"流程分析",settings:"设置",
+    autoCalc:"TrustWay 分析",autoText:"控制 · 分析 · 计划 · 增长",heroTitle:"TrustWay Control",
+    chinaTitle:"中国采购",installmentTitle:"分期付款_中国",investorTitle:"投资者",unitTitle:"单位经济",planTitle:"利润计划",flowTitle:"流程分析",settingsTitle:"设置",
+    kpiCost:"成本",kpiProfit:"净利润",kpiInstRest:"分期余额",kpiOrders:"订单",kpiInv:"投资",
+    profitChart:"商品利润图表",businessAnalysis:"业务分析",flowTrend:"流程 / 利润趋势",debtChart:"商品欠款图表",installmentAnalysis:"分期分析",flowChart:"流程图表",recommendations:"建议",
+    downloadReport:"下载报表",add:"添加",addRow:"添加行",resetData:"重置数据",logout:"退出",
+    totalYuan:"总额 ¥",totalRub:"总额 ₽",paidYuan:"已付 ¥",restYuan:"剩余 ¥",restRub:"剩余 ₽",
+    closed:"债务已结清",hasDebt:"还有剩余欠款",good:"良好：利润为正",risk:"风险：利润为负",strong:"强",normal:"正常"
+  }
+};
+let lang=localStorage.getItem("tw_lang_final")||"ru";
+let units=[{name:"Товар 1",purchase:700,sale:1738,buyout:90,delivery:133,back:120,tax:7,commission:25.5,pack:25,storage:1,writeoff:0},{name:"Триммер",purchase:79,sale:399,buyout:90,delivery:45,back:45,tax:7,commission:25.5,pack:10,storage:0,writeoff:0}];
+let china=[{date:"2026-05-04",flow:"Поток 1",product:"Товар 1",qty:10,yuanPrice:50,rate:10.8,chinaDelivery:20,cargo:15,customs:0,pack:0,workers:0,fulfillment:25,other:0}];
+let plan=[{date:"2026-05-04",flow:"Поток 1",product:"Товар 1",qty:10,ads:0,extra:0},{date:"2026-05-05",flow:"Поток 2",product:"Триммер",qty:20,ads:500,extra:0}];
+let investors=[{date:"2026-05-04",name:"Partner",country:"China",yuan:0,rate:10.8,share:30,projectProfit:0}];
+let inst=[{date:"",name:"",qty:0,yuan:0,rate:10.8,advanceDate:"",advanceYuan:0,secondDate:"",secondYuan:0}];
+
+function n(v){return Number(v)||0}
+function fmt(v){return new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:0}).format(isFinite(v)?v:0)}
+function fmtY(v){return (isFinite(v)?new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(v):0)+" ¥"}
+function calcUnit(r){const sale=n(r.sale),profit=sale-(n(r.purchase)+sale*n(r.commission)/100+n(r.delivery)+(1-n(r.buyout)/100)*n(r.back)+sale*n(r.tax)/100+n(r.pack)+n(r.storage)+sale*n(r.writeoff)/100);return{profit,margin:sale?profit/sale*100:0,cost:sale-profit}}
+function calcChina(r){const one=n(r.yuanPrice)*n(r.rate)+n(r.chinaDelivery)*n(r.rate)+n(r.cargo)*n(r.rate)+n(r.customs)+n(r.pack)+n(r.workers)+n(r.fulfillment)+n(r.other);return{one,total:one*n(r.qty)}}
+function calcInst(r){const totalY=n(r.qty)*n(r.yuan),rubOne=n(r.yuan)*n(r.rate),totalR=totalY*n(r.rate),paidY=n(r.advanceYuan)+n(r.secondYuan),restY=totalY-paidY,paidR=paidY*n(r.rate),restR=restY*n(r.rate);return{totalY,rubOne,totalR,paidY,restY,paidR,restR}}
+function save(){localStorage.setItem("tw_data_final_clean",JSON.stringify({units,china,plan,investors,inst}))}
+function load(){try{const d=JSON.parse(localStorage.getItem("tw_data_final_clean"));if(d){units=d.units||units;china=d.china||china;plan=d.plan||plan;investors=d.investors||investors;inst=d.inst||inst}}catch(e){}}
+function arrName(a){return a===units?"units":a===china?"china":a===plan?"plan":a===investors?"investors":"inst"}
+function inp(arr,i,k,type="number"){return `<input type="${type}" value="${arr[i][k]??""}" onchange="${arrName(arr)}[${i}]['${k}']=this.value;render()" onblur="${arrName(arr)}[${i}]['${k}']=this.value;render()">`}
+function del(arr,i){arr.splice(i,1);render()}
+function show(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id)?.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active")}
+function setLang(l){lang=l;localStorage.setItem("tw_lang_final",l);render()}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-t]").forEach(el=>{const k=el.getAttribute("data-t");if(langData[lang]&&langData[lang][k])el.textContent=langData[lang][k]});if(window.ruBtn){ruBtn.classList.toggle("active",lang==="ru");zhBtn.classList.toggle("active",lang==="zh")}}
+function unitOptions(val){return units.map(x=>`<option value="${x.name}" ${x.name===val?"selected":""}>${x.name}</option>`).join("")}
+function headers(list){return "<tr>"+list.map(h=>`<th>${h}</th>`).join("")+"</tr>"}
+
+function renderUnit(){unitHead.innerHTML=headers(lang==="zh"?["商品","采购 ₽","售价 ₽","赎回 %","配送 ₽","退货 ₽","税 %","佣金 %","包装 ₽","仓储 ₽","扣除 %","单件利润","利润率",""]:["Товар","Закупка ₽","Цена ₽","Выкуп %","Доставка ₽","Возврат ₽","Налог %","Комиссия %","Упаковка ₽","Хранение ₽","Списание %","Прибыль 1 шт","Маржа",""]);unitRows.innerHTML=units.map((r,i)=>{const c=calcUnit(r);return `<tr><td>${inp(units,i,"name","text")}</td><td>${inp(units,i,"purchase")}</td><td>${inp(units,i,"sale")}</td><td>${inp(units,i,"buyout")}</td><td>${inp(units,i,"delivery")}</td><td>${inp(units,i,"back")}</td><td>${inp(units,i,"tax")}</td><td>${inp(units,i,"commission")}</td><td>${inp(units,i,"pack")}</td><td>${inp(units,i,"storage")}</td><td>${inp(units,i,"writeoff")}</td><td class="${c.profit>=0?"green":"red"} num">${fmt(c.profit)}</td><td class="${c.margin>=20?"green":c.margin>=0?"amber":"red"} num">${c.margin.toFixed(1)}%</td><td><button class="btn btnRed" onclick="del(units,${i})">${lang==="zh"?"删除":"Удалить"}</button></td></tr>`}).join("")}
+function renderChina(){chinaHead.innerHTML=headers(lang==="zh"?["日期","批次","商品","数量","价格 ¥","汇率","中国配送 ¥","货运 ¥","海关 ₽","包装 ₽","工人 ₽","履约 ₽","其他 ₽","单件成本","总金额",""]:["Дата","Поток","Товар","Шт","Цена ¥","Курс","Доставка ¥","Карго ¥","Таможня ₽","Упаковка ₽","Рабочие ₽","Фулфилмент ₽","Другое ₽","Себестоимость 1 шт","Общая сумма",""]);chinaRows.innerHTML=china.map((r,i)=>{const c=calcChina(r);return `<tr><td>${inp(china,i,"date","date")}</td><td>${inp(china,i,"flow","text")}</td><td>${inp(china,i,"product","text")}</td><td>${inp(china,i,"qty")}</td><td>${inp(china,i,"yuanPrice")}</td><td>${inp(china,i,"rate")}</td><td>${inp(china,i,"chinaDelivery")}</td><td>${inp(china,i,"cargo")}</td><td>${inp(china,i,"customs")}</td><td>${inp(china,i,"pack")}</td><td>${inp(china,i,"workers")}</td><td>${inp(china,i,"fulfillment")}</td><td>${inp(china,i,"other")}</td><td class="num">${fmt(c.one)}</td><td class="green num">${fmt(c.total)}</td><td><button class="btn btnRed" onclick="del(china,${i})">${lang==="zh"?"删除":"Удалить"}</button></td></tr>`}).join("")}
+function renderInst(){instHead.innerHTML=headers(lang==="zh"?["日期","商品名称","数量","价格 ¥","总额 ¥","汇率","单件 ₽","总额 ₽","预付日期","预付 ¥","第二次付款日期","第二次付款 ¥","已付 ¥","剩余 ¥","已付 ₽","剩余 ₽",""]:["Дата","Номи товар","Штук","Нарх (¥)","Общий ¥","Курс","Рубл за 1 шт","Общий ₽","Аванс дата","Аванс (¥)","2-й платёж дата","2-й платёж (¥)","Оплачено всего (¥)","Остаток (¥)","Оплачено всего (₽)","Остаток (₽)",""]);let totalY=0,totalR=0,paidY=0,restY=0,paidR=0,restR=0;instRows.innerHTML=inst.map((r,i)=>{const c=calcInst(r);totalY+=c.totalY;totalR+=c.totalR;paidY+=c.paidY;restY+=c.restY;paidR+=c.paidR;restR+=c.restR;return `<tr><td>${inp(inst,i,"date","date")}</td><td>${inp(inst,i,"name","text")}</td><td>${inp(inst,i,"qty")}</td><td>${inp(inst,i,"yuan")}</td><td class="cyan num">${fmtY(c.totalY)}</td><td>${inp(inst,i,"rate")}</td><td class="num">${fmt(c.rubOne)}</td><td class="green num">${fmt(c.totalR)}</td><td>${inp(inst,i,"advanceDate","date")}</td><td>${inp(inst,i,"advanceYuan")}</td><td>${inp(inst,i,"secondDate","date")}</td><td>${inp(inst,i,"secondYuan")}</td><td class="green num">${fmtY(c.paidY)}</td><td class="${c.restY>0?"amber":"green"} num">${fmtY(c.restY)}</td><td class="green num">${fmt(c.paidR)}</td><td class="${c.restR>0?"red":"green"} num">${fmt(c.restR)}</td><td><button class="btn btnRed" onclick="del(inst,${i})">${lang==="zh"?"删除":"Удалить"}</button></td></tr>`}).join("");instTotalY.textContent=fmtY(totalY);instTotalR.textContent=fmt(totalR);instPaidY.textContent=fmtY(paidY);instRestY.textContent=fmtY(restY);instRestR.textContent=fmt(restR);instBars.innerHTML=inst.map(r=>{const c=calcInst(r),h=Math.max(8,Math.min(100,Math.abs(c.restR)/100));return `<div class="barBox"><div class="barBg"><div class="bar" style="height:${h}%;background:${c.restR>0?'linear-gradient(0deg,var(--red),var(--amber))':'linear-gradient(0deg,var(--green),var(--cyan))'}"></div></div><div style="margin-top:10px">${r.name||"Товар"}</div><b class="${c.restR>0?'red':'green'}">${fmt(c.restR)}</b></div>`}).join("");const debtText=restR>0?`${langData[lang].hasDebt}: ${fmt(restR)}`:langData[lang].closed;instAnalysis.innerHTML=`<div class="analysisItem"><b>${langData[lang].totalRub}</b><br>${fmt(totalR)} / ${fmtY(totalY)}</div><div class="analysisItem"><b>${langData[lang].paidYuan}</b><br><span class="green">${fmt(paidR)}</span> / ${fmtY(paidY)}</div><div class="analysisItem"><b>Status</b><br><span class="${restR>0?'red':'green'}">${debtText}</span></div>`}
+function renderPlan(){planHead.innerHTML=headers(lang==="zh"?["日期","批次","商品","单件利润","数量","销售额","毛利润","广告","其他费用","净利润",""]:["Дата","Поток","Товар","Прибыль 1 шт","Кол-во","Выручка","Валовая прибыль","Реклама","Доп. расход","Чистая прибыль",""]);planRows.innerHTML=plan.map((r,i)=>{const u=units.find(x=>x.name===r.product)||units[0]||{};const unitP=calcUnit(u).profit,revenue=n(u.sale)*n(r.qty),gross=unitP*n(r.qty),net=gross-n(r.ads)-n(r.extra);return `<tr><td>${inp(plan,i,"date","date")}</td><td>${inp(plan,i,"flow","text")}</td><td><select onchange="plan[${i}].product=this.value;render()">${unitOptions(r.product)}</select></td><td class="${unitP>=0?"green":"red"} num">${fmt(unitP)}</td><td>${inp(plan,i,"qty")}</td><td class="num">${fmt(revenue)}</td><td class="${gross>=0?"green":"red"} num">${fmt(gross)}</td><td>${inp(plan,i,"ads")}</td><td>${inp(plan,i,"extra")}</td><td class="${net>=0?"green":"red"} num">${fmt(net)}</td><td><button class="btn btnRed" onclick="del(plan,${i})">${lang==="zh"?"删除":"Удалить"}</button></td></tr>`}).join("")}
+function totalPlanProfit(){return plan.reduce((s,r)=>{const u=units.find(x=>x.name===r.product)||units[0]||{};return s+calcUnit(u).profit*n(r.qty)-n(r.ads)-n(r.extra)},0)}
+function renderInvestors(){investorHead.innerHTML=headers(lang==="zh"?["日期","投资者","国家","金额 ¥","汇率","金额 ₽","股份 %","项目利润","分红",""]:["Дата","Инвестор","Страна","Сумма ¥","Курс","Сумма ₽","Доля %","Прибыль проекта","Выплата",""]);investorRows.innerHTML=investors.map((r,i)=>{const rub=n(r.yuan)*n(r.rate),base=n(r.projectProfit)||totalPlanProfit(),payout=base*n(r.share)/100;return `<tr><td>${inp(investors,i,"date","date")}</td><td>${inp(investors,i,"name","text")}</td><td>${inp(investors,i,"country","text")}</td><td>${inp(investors,i,"yuan")}</td><td>${inp(investors,i,"rate")}</td><td class="green num">${fmt(rub)}</td><td>${inp(investors,i,"share")}</td><td>${inp(investors,i,"projectProfit")}</td><td class="green num">${fmt(payout)}</td><td><button class="btn btnRed" onclick="del(investors,${i})">${lang==="zh"?"删除":"Удалить"}</button></td></tr>`}).join("")}
+function flowData(){const map={};plan.forEach(r=>{const u=units.find(x=>x.name===r.product)||units[0]||{};const unitP=calcUnit(u).profit,revenue=n(u.sale)*n(r.qty),gross=unitP*n(r.qty),net=gross-n(r.ads)-n(r.extra);if(!map[r.flow])map[r.flow]={flow:r.flow,qty:0,revenue:0,gross:0,ads:0,net:0};map[r.flow].qty+=n(r.qty);map[r.flow].revenue+=revenue;map[r.flow].gross+=gross;map[r.flow].ads+=n(r.ads);map[r.flow].net+=net});return Object.values(map)}
+function renderFlow(){const data=flowData();flowKpis.innerHTML=data.map(x=>`<div class="card"><div class="kpiIcon">🧠</div><div class="label">${x.flow}</div><div class="value ${x.net>=0?"green":"red"}">${fmt(x.net)}</div></div>`).join("");flowHead.innerHTML=headers(lang==="zh"?["批次","数量","销售额","毛利润","广告","净利润","状态"]:["Поток","Кол-во","Выручка","Валовая прибыль","Реклама","Чистая прибыль","Статус"]);flowRows.innerHTML=data.map(x=>`<tr><td><b>${x.flow}</b></td><td class="num">${x.qty}</td><td class="num">${fmt(x.revenue)}</td><td class="${x.gross>=0?"green":"red"} num">${fmt(x.gross)}</td><td class="num">${fmt(x.ads)}</td><td class="${x.net>=0?"green":"red"} num">${fmt(x.net)}</td><td>${x.net>5000?langData[lang].strong:x.net>=0?langData[lang].normal:"Risk"}</td></tr>`).join("");flowBars.innerHTML=data.map(x=>{const h=Math.max(8,Math.min(100,Math.abs(x.net)/100));return `<div class="barBox"><div class="barBg"><div class="bar" style="height:${h}%;background:${x.net>=0?'linear-gradient(0deg,var(--green),var(--cyan))':'linear-gradient(0deg,var(--red),var(--amber))'}"></div></div><div style="margin-top:10px">${x.flow}</div><b class="${x.net>=0?'green':'red'}">${fmt(x.net)}</b></div>`}).join("");flowAdvice.innerHTML=data.map(x=>`<div class="analysisItem" style="margin-bottom:12px"><b>${x.flow}</b><br>${x.net>=0?langData[lang].good:langData[lang].risk}</div>`).join("")||"—"}
+function renderDash(){const totalCost=china.reduce((s,r)=>s+calcChina(r).total,0),profit=totalPlanProfit(),inv=investors.reduce((s,r)=>s+n(r.yuan)*n(r.rate),0),orders=plan.reduce((s,r)=>s+n(r.qty),0),avg=units.length?units.reduce((s,r)=>s+calcUnit(r).margin,0)/units.length:0,instRest=inst.reduce((s,r)=>s+calcInst(r).restR,0);kpiCost.textContent=fmt(totalCost);kpiProfit.textContent=fmt(profit);kpiProfit.className="value "+(profit>=0?"green":"red");kpiInv.textContent=fmt(inv);kpiInstRest.textContent=fmt(instRest);kpiInstRest.className="value "+(instRest>0?"amber":"green");kpiOrders.textContent=orders;bars.innerHTML=units.map(u=>{const p=calcUnit(u).profit,h=Math.max(8,Math.min(100,Math.abs(p)/20));return `<div class="barBox"><div class="barBg"><div class="bar" style="height:${h}%;background:${p>=0?'linear-gradient(0deg,var(--green),var(--cyan))':'linear-gradient(0deg,var(--red),var(--amber))'}"></div></div><div style="margin-top:10px">${u.name}</div><b class="${p>=0?'green':'red'}">${fmt(p)}</b></div>`}).join("");dashAnalysis.innerHTML=`<div class="analysisItem"><b>Profit</b><br><span class="${profit>=0?'green':'red'}">${fmt(profit)}</span></div><div class="analysisItem"><b>Margin</b><br><span class="${avg>=20?'green':'amber'}">${avg.toFixed(1)}%</span></div><div class="analysisItem"><b>${langData[lang].installment}</b><br><span class="${instRest>0?'amber':'green'}">${fmt(instRest)}</span></div>`;drawTrend(flowData())}
+function drawTrend(data){const svg=trendSvg,w=900,h=240,p=28;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);svg.innerHTML="";if(!data.length)return;const max=Math.max(...data.map(x=>Math.abs(x.net)),1);const pts=data.map((x,i)=>[p+i*(w-2*p)/Math.max(1,data.length-1),h/2-(x.net/max)*(h/2-p)]);svg.innerHTML=`<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#f6d56b"/></linearGradient></defs><line x1="${p}" y1="${h/2}" x2="${w-p}" y2="${h/2}" stroke="rgba(255,255,255,.18)"/><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`+pts.map((pt,i)=>`<circle cx="${pt[0]}" cy="${pt[1]}" r="7" fill="#fff"/><text x="${pt[0]}" y="${h-8}" text-anchor="middle" fill="#9aa8bb" font-size="13">${data[i].flow}</text>`).join("")}
+function render(){save();renderUnit();renderChina();renderInst();renderPlan();renderInvestors();renderFlow();renderDash();applyLang()}
+function addUnit(){units.push({name:"Новый товар",purchase:0,sale:0,buyout:90,delivery:0,back:0,tax:7,commission:25.5,pack:0,storage:0,writeoff:0});render()}
+function addChina(){china.push({date:"2026-05-04",flow:"Поток "+(china.length+1),product:"Новый товар",qty:1,yuanPrice:0,rate:10.8,chinaDelivery:0,cargo:0,customs:0,pack:0,workers:0,fulfillment:0,other:0});render()}
+function addInst(){inst.push({date:"",name:"",qty:0,yuan:0,rate:10.8,advanceDate:"",advanceYuan:0,secondDate:"",secondYuan:0});render()}
+function addPlan(){plan.push({date:"2026-05-04",flow:"Поток "+(plan.length+1),product:units[0]?.name||"Товар",qty:1,ads:0,extra:0});render()}
+function addInvestor(){investors.push({date:"2026-05-04",name:"Investor",country:"China",yuan:0,rate:10.8,share:30,projectProfit:0});render()}
+function csvEscape(v){return `"${String(v??"").replaceAll('"','""')}"`}
+function downloadReport(){let rows=[["TRUSTWAY CONTROL"],[],["UNIT"],["Product","Purchase","Sale","Profit","Margin"]];units.forEach(u=>{const c=calcUnit(u);rows.push([u.name,u.purchase,u.sale,c.profit.toFixed(2),c.margin.toFixed(2)])});rows.push([],["CHINA"],["Flow","Product","Qty","Cost one","Total"]);china.forEach(r=>{const c=calcChina(r);rows.push([r.flow,r.product,r.qty,c.one.toFixed(2),c.total.toFixed(2)])});rows.push([],["INSTALLMENT"],["Дата","Номи товар","Штук","Нарх ¥","Общий ¥","Курс","Рубл за 1 шт","Общий ₽","Аванс дата","Аванс ¥","2-й платёж дата","2-й платёж ¥","Оплачено всего ¥","Остаток ¥","Оплачено всего ₽","Остаток ₽"]);inst.forEach(r=>{const c=calcInst(r);rows.push([r.date,r.name,r.qty,r.yuan,c.totalY,r.rate,c.rubOne,c.totalR,r.advanceDate,r.advanceYuan,r.secondDate,r.secondYuan,c.paidY,c.restY,c.paidR,c.restR])});const csv=rows.map(r=>r.map(csvEscape).join(";")).join("\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="TrustWay_Report.csv";a.click()}
+function resetData(){if(confirm("Reset data?")){localStorage.removeItem("tw_data_final_clean");location.reload()}}
+load();render();
+</script>
+
+<script>
+/* TrustWay Auth: only this login and password work */
+(function(){
+  const TW_LOGIN = "Trust Way";
+  const TW_PASSWORD = "20260124";
+  const SESSION_KEY = "trustway_auth_ok";
+  let authLang = localStorage.getItem("tw_auth_lang") || localStorage.getItem("tw_lang_final") || "ru";
+
+  const authText = {
+    ru:{
+      subtitle:"Войдите в систему",
+      login:"Введите логин",
+      password:"Введите пароль",
+      enter:"Войти",
+      error:"Неверный логин или пароль"
+    },
+    zh:{
+      subtitle:"登录系统",
+      login:"请输入登录名",
+      password:"请输入密码",
+      enter:"登录",
+      error:"用户名或密码错误"
+    }
+  };
+
+  function lockSite(){
+    if(sessionStorage.getItem(SESSION_KEY)==="1") return;
+    const originalApp = document.body.innerHTML;
+    window.__TW_ORIGINAL_APP__ = originalApp;
+    renderLogin();
+  }
+
+  window.twSetAuthLang = function(l){
+    authLang = l;
+    localStorage.setItem("tw_auth_lang", l);
+    renderLogin();
+  };
+
+  function renderLogin(){
+    const t = authText[authLang] || authText.ru;
+    document.documentElement.lang = authLang === "zh" ? "zh" : "ru";
+    document.body.innerHTML = `
+      <div class="tw-auth-screen">
+        <div class="tw-login-card">
+          <div class="tw-login-logo">TW</div>
+          <h1>TrustWay Control</h1>
+          <p>${t.subtitle}</p>
+
+          <div class="tw-auth-lang">
+            <button type="button" class="${authLang==="ru"?"active":""}" onclick="twSetAuthLang('ru')">🇷🇺 Русский</button>
+            <button type="button" class="${authLang==="zh"?"active":""}" onclick="twSetAuthLang('zh')">🇨🇳 中文</button>
+          </div>
+
+          <input id="twLogin" type="text" placeholder="${t.login}" autocomplete="username">
+          <input id="twPass" type="password" placeholder="${t.password}" autocomplete="current-password">
+          <button type="button" onclick="twLoginCheck()">${t.enter}</button>
+          <div id="twAuthError" class="tw-auth-error"></div>
+        </div>
+      </div>
+    `;
+    setTimeout(()=>{
+      const input = document.getElementById("twLogin");
+      if(input) input.focus();
+      document.addEventListener("keydown", authEnterHandler);
+    },0);
+  }
+
+  function authEnterHandler(e){
+    if(e.key === "Enter" && document.getElementById("twLogin")){
+      window.twLoginCheck();
+    }
+  }
+
+  window.twLoginCheck = function(){
+    const u = (document.getElementById("twLogin")?.value || "").trim();
+    const p = (document.getElementById("twPass")?.value || "").trim();
+    if(u === TW_LOGIN && p === TW_PASSWORD){
+      sessionStorage.setItem(SESSION_KEY, "1");
+      document.removeEventListener("keydown", authEnterHandler);
+      document.body.innerHTML = window.__TW_ORIGINAL_APP__ || "";
+      if(typeof render === "function") render();
+    }else{
+      const err = document.getElementById("twAuthError");
+      if(err) err.textContent = (authText[authLang] || authText.ru).error;
+    }
+  };
+
+  window.twLogout = function(){
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  };
+
+  lockSite();
+})();
+</script>
+
+</body>
+</html>
